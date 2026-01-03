@@ -9,6 +9,15 @@ use Illuminate\Support\Facades\Storage;
 
 class FoodController extends Controller
 {
+    
+    private function formatImage($food)
+    {
+        if ($food && $food->image) {
+            $food->image = asset('storage/' . $food->image);
+        }
+        return $food;
+    }
+
     public function index(Request $request)
     {
         $query = Food::query();
@@ -21,7 +30,9 @@ class FoodController extends Controller
             $query->where('name', 'LIKE', '%' . $request->search . '%');
         }
 
-        $foods = $query->get();
+        $foods = $query->get()->map(function ($food) {
+            return $this->formatImage($food);
+        });
 
         return response()->json([
             'status' => 'success',
@@ -29,10 +40,8 @@ class FoodController extends Controller
         ], 200);
     }
 
-
     public function store(Request $request)
     {
-
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'category' => 'required|string|max:100',
@@ -58,15 +67,21 @@ class FoodController extends Controller
             'image' => $imagePath
         ]);
 
+        $food = $this->formatImage($food);
+
         return response()->json($food, 201);
     }
 
     public function show($id)
     {
         $food = Food::find($id);
+
         if (!$food) {
             return response()->json(['message' => 'Food not found'], 404);
         }
+
+        $food = $this->formatImage($food);
+
         return response()->json([
             'status' => 'success',
             'food' => $food
@@ -76,6 +91,7 @@ class FoodController extends Controller
     public function update(Request $request, $id)
     {
         $food = Food::find($id);
+
         if (!$food) {
             return response()->json(['message' => 'Food not found'], 404);
         }
@@ -93,21 +109,17 @@ class FoodController extends Controller
         }
 
         if ($request->hasFile('image')) {
-
-
             if ($food->image && Storage::disk('public')->exists($food->image)) {
                 Storage::disk('public')->delete($food->image);
             }
 
-
-            $imagePath = $request->file('image')->store('images', 'public');
-            $food->image = $imagePath;
+            $food->image = $request->file('image')->store('images', 'public');
         }
 
-
         $food->fill($request->only(['name', 'category', 'ingredients', 'steps']));
-
         $food->save();
+
+        $food = $this->formatImage($food);
 
         return response()->json([
             'status' => 'updated success',
@@ -118,10 +130,17 @@ class FoodController extends Controller
     public function destroy($id)
     {
         $food = Food::find($id);
+
         if (!$food) {
             return response()->json(['message' => 'Food not found'], 404);
         }
+
+        if ($food->image && Storage::disk('public')->exists($food->image)) {
+            Storage::disk('public')->delete($food->image);
+        }
+
         $food->delete();
+
         return response()->json(['message' => 'Food deleted successfully'], 200);
     }
 }
