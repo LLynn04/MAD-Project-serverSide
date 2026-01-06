@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Authcontroller;
 use App\Http\Controllers\FoodController;
 use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\ProfileController;
 
 Route::post('/register', [Authcontroller::class, 'register']);
 Route::post('/login', [Authcontroller::class, 'login']);
@@ -31,6 +32,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/wishlist', [WishlistController::class, 'add']);
     Route::delete('/wishlist', [WishlistController::class, 'remove']);
     Route::get('/wishlist', [WishlistController::class, 'list']);
+
+    // Profile management
+    Route::put('/profile/username', [ProfileController::class, 'updateUsername']);
+    Route::put('/profile/email', [ProfileController::class, 'updateEmail']);
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword']);
 });
 
 
