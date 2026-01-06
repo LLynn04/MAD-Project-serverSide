@@ -8,6 +8,14 @@ use Illuminate\Http\Request;
 
 class WishlistController extends Controller
 {
+    private function formatImage($food)
+    {
+        if ($food && $food->image) {
+            $food->image = asset('storage/' . $food->image);
+        }
+        return $food;
+    }
+
     public function add(Request $request)
     {
         $request->validate([
@@ -37,7 +45,11 @@ class WishlistController extends Controller
                     ->with('food')
                     ->get();
 
-        return response()->json(['wishlist' => $wishlist]);
+        // Transform the data to return food items with properly formatted image URLs
+        $foods = $wishlist->map(function ($item) {
+            return $this->formatImage($item->food);
+        });
+
+        return response()->json($foods);
     }
 }
-

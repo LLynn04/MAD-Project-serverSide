@@ -8,10 +8,10 @@ use App\Http\Controllers\WishlistController;
 
 Route::post('/register', [Authcontroller::class, 'register']);
 Route::post('/login', [Authcontroller::class, 'login']);
-Route::get('/email/verify/{id}/{hash}', [Authcontroller::class, 'verifyEmail'])
-    ->name('verification.verify');
-Route::post('/email/resend', [Authcontroller::class, 'resendEmailVerification'])
-    ->name('verification.send');
+// Route::get('/email/verify/{id}/{hash}', [Authcontroller::class, 'verifyEmail'])
+//     ->name('verification.verify');
+// Route::post('/email/resend', [Authcontroller::class, 'resendEmailVerification'])
+//     ->name('verification.send');
 Route::post('/forget-password', [Authcontroller::class, 'ForgetPassword']);
 Route::post('/reset-password', [Authcontroller::class, 'ResetPassword']);
 
