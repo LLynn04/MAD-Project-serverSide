@@ -19,13 +19,13 @@ class Authcontroller extends Controller
     {
 
         $user = $creator->create($request->all());
-        $user->sendEmailVerificationNotification();
+        // $user->sendEmailVerificationNotification();
         return response()->json([
             'status' => true,
             'message' => 'User registered successfully',
             'user' => $user
         ], 201);
-    }
+    }   
 
 
     // public function verifyEmail($id, $hash)
@@ -149,14 +149,14 @@ class Authcontroller extends Controller
         ], 200);
     }
 
-    public function me(Request $request)
-    {
-        $user = $request->user();
-        return response()->json([
-            'status' => true,
-            'user' => $user
-        ], 200);
-    }
+    // public function me(Request $request)
+    // {
+    //     $user = $request->user();
+    //     return response()->json([
+    //         'status' => true,
+    //         'user' => $user
+    //     ], 200);
+    // }
 
     public function ForgetPassword(Request $request)
     {

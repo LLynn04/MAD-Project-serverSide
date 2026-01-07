@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Authcontroller;
 use App\Http\Controllers\FoodController;
 use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\ProfileController;
+
 
 Route::post('/register', [Authcontroller::class, 'register']);
 Route::post('/login', [Authcontroller::class, 'login']);
@@ -18,7 +21,7 @@ Route::post('/reset-password', [Authcontroller::class, 'ResetPassword']);
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::post('/logout', [Authcontroller::class, 'logout']);
-    Route::get('/me', [Authcontroller::class, 'me']);
+    // Route::get('/me', [Authcontroller::class, 'me']);
 });
 
 Route::post('/food', [FoodController::class, 'store']);
@@ -31,7 +34,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/wishlist', [WishlistController::class, 'add']);
     Route::delete('/wishlist', [WishlistController::class, 'remove']);
     Route::get('/wishlist', [WishlistController::class, 'list']);
+    Route::post('/comments', [ReviewController::class, 'store']);
+    Route::delete('/comments/{id}', [ReviewController::class, 'destroy']);
+    Route::get('/me', [ProfileController::class, 'show']);
+    Route::put('/me', [ProfileController::class, 'update']);
+    Route::put('/me/password', [ProfileController::class, 'changePassword']);
 });
+Route::get('/foods/{foodId}/comments', [ReviewController::class, 'getByFood']);
 
 
 
