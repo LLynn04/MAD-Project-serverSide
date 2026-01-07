@@ -36,9 +36,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/wishlist', [WishlistController::class, 'list']);
     Route::post('/comments', [ReviewController::class, 'store']);
     Route::delete('/comments/{id}', [ReviewController::class, 'destroy']);
-    Route::get('/me', [ProfileController::class, 'show']);
-    Route::put('/me', [ProfileController::class, 'update']);
-    Route::put('/me/password', [ProfileController::class, 'changePassword']);
+     Route::put('/profile/username', [ProfileController::class, 'updateUsername']);
+    Route::put('/profile/email', [ProfileController::class, 'updateEmail']);
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword']);
 });
 Route::get('/foods/{foodId}/comments', [ReviewController::class, 'getByFood']);
 
